@@ -20,10 +20,7 @@ public class NotificationController {
     @GetMapping("/priority")
     public ResponseEntity<List<Map<String, Object>>> getPriorityInbox(
             @RequestParam(defaultValue = "10") int n) {
-
-        // Notification data fetched from evaluation service
         List<Map<String, Object>> notifications = new ArrayList<>();
-
         notifications.add(Map.of("ID","7adb5e3b-80f0-49c3-8310-001ef2e540b7","Type","Placement","Message","Nvidia Corporation hiring","Timestamp","2026-06-02 23:59:21"));
         notifications.add(Map.of("ID","79d63546-275d-4557-8f72-4fe3cba6db7e","Type","Result","Message","external","Timestamp","2026-06-02 12:59:07"));
         notifications.add(Map.of("ID","5371ae39-aa52-4e38-af93-e52d64be94bd","Type","Result","Message","end-sem","Timestamp","2026-06-02 15:58:53"));
@@ -45,15 +42,12 @@ public class NotificationController {
         notifications.add(Map.of("ID","05484e12-8144-45b7-ac31-75238ba9a81d","Type","Placement","Message","Booking Holdings Inc. hiring","Timestamp","2026-06-03 05:25:09"));
         notifications.add(Map.of("ID","22eb7ba2-9d52-481e-aa49-3152ea7020fa","Type","Result","Message","external","Timestamp","2026-06-02 14:24:55"));
 
-        // Sort by weight desc then timestamp desc
         notifications.sort((a, b) -> {
             int wa = getWeight((String) a.get("Type"));
             int wb = getWeight((String) b.get("Type"));
             if (wb != wa) return wb - wa;
             return ((String) b.get("Timestamp")).compareTo((String) a.get("Timestamp"));
         });
-
-        // Add weight field and take top N
         List<Map<String, Object>> result = new ArrayList<>();
         for (int i = 0; i < Math.min(n, notifications.size()); i++) {
             Map<String, Object> notif = new LinkedHashMap<>(notifications.get(i));
